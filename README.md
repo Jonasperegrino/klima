@@ -1,2 +1,2 @@
 # klima
-Get interactive climate diagramm from location using plotly and flask
+Get interactive climate diagramm with data from dwd using plotly and flask
