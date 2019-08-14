@@ -6,17 +6,17 @@ import pandas as pd
 from datetime import datetime
 from datetime import timedelta
 from geopy.geocoders import Nominatim
-
-import pandas as pd
-from datetime import datetime
-from datetime import timedelta
+from flask import Flask, render_template, request
+import plotly
+import plotly.graph_objs as go
+import json
 
 #input
-ort = 'Nürnberg'
-flug1 = '20190101'
-flug2 = '20190806'
-name ='FC Köln'
-
+f = open('input.txt')
+ort = f.readline()
+datum1 = f.readline()
+datum2 = f.readline()
+print(ort, datum1, datum2)
 #ort -> geocoords
 geolocator = Nominatim(user_agent="GGS")
 location = geolocator.geocode(ort)
@@ -27,7 +27,7 @@ location = geolocator.geocode(ort)
 col_widths = [[0,5],[6,14],[15,23],[35,39],[43,51],[53,60],[61,101],[102,201]]
 col_names = ['Stations_id','von_datum','bis_datum','Stationshoehe','geoBreite','geoLaenge','Stationsname','Bundesland']
 
-df = pd.read_fwf('/c/code/klima/KL_Tageswerte_Beschreibung_Stationen.txt', colspecs=col_widths, names=col_names)
+df = pd.read_fwf('Stationen.txt', colspecs=col_widths, names=col_names)
 df = df.drop([0,1])
 df = df[['Stations_id','geoBreite','geoLaenge','Stationsname']]
 df['Stations_id'] = df['Stations_id'].astype('str')
@@ -83,22 +83,15 @@ klima.columns = ['Station', 'Datum', 'Qualität', 'Wind_max', 'Windgeschwindigke
 
 #datum formatieren
 klima['Datum'] = pd.to_datetime(klima['Datum'], format='%Y%m%d')
-flug1 = datetime.strptime(flug1, '%Y%m%d')
-flug2 = datetime.strptime(flug2, '%Y%m%d')
-start = flug1 - timedelta(days=14)
-ende  = flug2 + timedelta(days=14)
+# datum1 = datetime.strptime(datum1, '%Y%m%d')
+# datum2 = datetime.strptime(datum2, '%Y%m%d')
 
 #subset klima
 klima = klima[['Datum', 'Niederschlag', 'Temperatur']]
-mask  = (klima['Datum'] >= start) & (klima['Datum'] <= ende)
+mask  = (klima['Datum'] >= datum1) & (klima['Datum'] <= datum2)
 klima = klima.loc[mask]
 
 # print(klima.head())
-
-from flask import Flask, render_template, request
-import plotly
-import plotly.graph_objs as go
-import json
 
 app = Flask(__name__)
 
