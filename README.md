@@ -6,6 +6,7 @@ input.txt contains location, start date and end date for the diagramm.
 
 # docker cmd
 docker build -t klima_flask .
+
 docker run -p 5000:5000 -it --rm --name klima klima_flask
 
 Get IP:
