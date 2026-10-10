@@ -1,5 +1,5 @@
 wget==3.2
 pandas==0.25.0
-geopy==1.20.0
+geopy==2.5.0
 plotly==4.1.0
 Flask==3.1.3
